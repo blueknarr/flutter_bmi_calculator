@@ -11,6 +11,15 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   /// Form을 사용하면 키를 설정해야 한다. Form의 상태를 가지고 있다.
   final _formKey = GlobalKey<FormState>();
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
+
+  @override
+  void dispose() {
+    _heightController.dispose();
+    _weightController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +37,7 @@ class _MainScreenState extends State<MainScreen> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 TextFormField(
+                  controller: _heightController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: '키',
@@ -47,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
+                  controller: _weightController,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: '몸무게',
@@ -66,16 +77,16 @@ class _MainScreenState extends State<MainScreen> {
                 ElevatedButton(
                   onPressed: () {
                     /// formKey의 현재 상태가 null이면 false
-                    if (_formKey.currentState?.validate() ?? false) {
+                    if (_formKey.currentState?.validate() == false) {
                       return;
                     }
 
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ResultScreen(
-                          height: 180,
-                          weight: 77.5,
+                        builder: (context) => ResultScreen(
+                          height: double.parse(_heightController.text),
+                          weight: double.parse(_weightController.text),
                         ),
                       ),
                     );
